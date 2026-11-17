@@ -1,0 +1,26 @@
+[
+  {
+    "id": "scanner-1",
+    "name": "Сканер 1",
+    "position": { "x": 3.0, "y": 2.5 },
+    "range": 2.6
+  },
+  {
+    "id": "scanner-2",
+    "name": "Сканер 2",
+    "position": { "x": 9.0, "y": 2.5 },
+    "range": 2.6
+  },
+  {
+    "id": "scanner-3",
+    "name": "Сканер 3",
+    "position": { "x": 15.0, "y": 2.5 },
+    "range": 2.6
+  },
+  {
+    "id": "scanner-4",
+    "name": "Сканер 4",
+    "position": { "x": 15.0, "y": 7.5 },
+    "range": 2.6
+  }
+]

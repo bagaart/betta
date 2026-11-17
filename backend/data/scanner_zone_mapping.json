@@ -1,0 +1,18 @@
+[
+  {
+    "scanner_id": "scanner-1",
+    "zone_id": "zone-1"
+  },
+  {
+    "scanner_id": "scanner-2",
+    "zone_id": "zone-2"
+  },
+  {
+    "scanner_id": "scanner-3",
+    "zone_id": "zone-3"
+  },
+  {
+    "scanner_id": "scanner-4",
+    "zone_id": "zone-4"
+  }
+]

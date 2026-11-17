@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система позиционирования</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <div class="app" id="app">
+
+        <!-- Карта -->
+        <main class="map-panel">
+
+            <!-- Панель управления масштабом -->
+            <div class="map-toolbar">
+                <button id="zoom-in" class="tool-button" title="Увеличить">+</button>
+                <button id="zoom-out" class="tool-button" title="Уменьшить">−</button>
+                <button id="zoom-reset" class="tool-button reset-button" title="Сбросить масштаб">
+                    Сброс
+                </button>
+            </div>
+
+            <!-- Область отображения карты -->
+            <div class="map-viewport">
+                <div id="map"></div>
+            </div>
+
+        </main>
+
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+
+            <div class="sidebar-header">
+                <h2>Информация</h2>
+            </div>
+
+            <div class="sidebar-content" id="sidebar-content">
+            </div>
+
+        </aside>
+
+        <!-- Кнопка скрытия боковой панели -->
+        <button
+            id="sidebar-toggle"
+            class="sidebar-toggle"
+            title="Скрыть панель"
+            type="button"
+        >
+            ‹
+        </button>
+
+    </div>
+
+    <script type="module" src="/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,492 @@
+
+/* ========================================
+   RESET
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #e9edf2;
+    overflow: hidden;
+}
+
+
+/* ========================================
+   MAIN LAYOUT
+   ======================================== */
+
+.app {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+}
+
+
+/* ========================================
+   MAP PANEL
+   ======================================== */
+
+.map-panel {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: #e9edf2;
+
+    overflow: hidden;
+}
+
+.map-viewport {
+    position: absolute;
+    inset: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: grab;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.map-viewport:active {
+    cursor: grabbing;
+}
+
+#map {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+}
+
+/* SVG карты */
+
+#map svg {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: none;
+    max-height: none;
+
+    background: white;
+
+    user-select: none;
+    -webkit-user-drag: none;
+    padding: 20px;
+}
+
+
+/* ========================================
+   MAP TOOLBAR
+   ======================================== */
+
+.map-toolbar {
+    position: absolute;
+
+    top: 16px;
+    left: 16px;
+
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tool-button {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: white;
+    color: #333;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+}
+
+.tool-button:hover {
+    background: #f3f4f6;
+}
+
+.tool-button:active {
+    background: #e5e7eb;
+}
+
+.reset-button {
+    width: auto;
+    padding: 0 12px;
+    font-size: 13px;
+}
+
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: white;
+
+    border-left: 1px solid #d1d5db;
+
+    overflow: hidden;
+}
+
+.sidebar-header {
+    flex: 0 0 64px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 24px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #222;
+}
+
+.sidebar-content {
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 24px;
+
+    overflow-y: auto;
+}
+
+
+/* ========================================
+   SIDEBAR TOGGLE
+   ======================================== */
+
+.sidebar-toggle {
+    position: absolute;
+
+    z-index: 20;
+
+    top: 50%;
+    left: 60%;
+
+    transform: translate(-50%, -50%);
+
+    width: 36px;
+    height: 56px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px 0 0 8px;
+
+    background: white;
+    color: #555;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+}
+
+.sidebar-toggle:hover {
+    background: #f3f4f6;
+}
+
+
+/* ========================================
+   COLLAPSED SIDEBAR
+   ======================================== */
+
+.app.sidebar-collapsed {
+    grid-template-columns: minmax(0, 1fr) 0;
+}
+
+.app.sidebar-collapsed .sidebar {
+    visibility: hidden;
+    border: none;
+}
+
+.app.sidebar-collapsed .sidebar-toggle {
+    left: 100%;
+    transform: translate(-100%, -50%);
+    border-radius: 8px 0 0 8px;
+}
+
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 700px) {
+
+    .app {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+
+    .sidebar-header {
+        padding: 0 12px;
+    }
+
+    .sidebar-content {
+        padding: 12px;
+    }
+
+    .map-toolbar {
+        top: 10px;
+        left: 10px;
+    }
+}
+
+/* ========================================
+   ZONES
+   ======================================== */
+
+.map-zone {
+    cursor: pointer;
+}
+
+.zone-rectangle {
+    fill: #4caf50;
+    fill-opacity: 0.18;
+
+    stroke: #2e7d32;
+    stroke-width: 0.06;
+
+    transition: fill-opacity 0.15s ease;
+}
+
+.map-zone:hover .zone-rectangle {
+    fill-opacity: 0.35;
+}
+
+.map-zone.selected .zone-rectangle {
+    fill: #2196f3;
+    fill-opacity: 0.3;
+
+    stroke: #1565c0;
+    stroke-width: 0.1;
+}
+
+.zone-label {
+    fill: #263238;
+    font-size: 0.35px;
+    font-weight: bold;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+
+/* ========================================
+   MAP ZOOM
+   ======================================== */
+
+#map svg {
+    transform-origin: center center;
+    transition: transform 0.15s ease;
+}
+
+
+/* ========================================
+   SIDEBAR INFO
+   ======================================== */
+
+.entity-type {
+    margin: 12px 0 24px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: 14px;
+}
+
+.info-row span {
+    color: #64748b;
+}
+
+.info-row strong {
+    color: #222;
+    text-align: right;
+}
+
+/* ========================================
+   MAP DRAGGING
+   ======================================== */
+
+.map-viewport {
+    cursor: grab;
+    touch-action: none;
+}
+
+.map-viewport.is-dragging {
+    cursor: grabbing;
+}
+
+.map-viewport.is-dragging #map {
+    user-select: none;
+}
+
+#map svg {
+    will-change: transform;
+}
+
+/* ========================================
+   SIDEBAR SECTIONS
+   ======================================== */
+
+.sidebar-section {
+    margin-bottom: 28px;
+}
+
+.sidebar-section-title {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.sidebar-entity-title {
+    margin: 0 0 12px;
+    font-size: 18px;
+    color: #222;
+}
+
+.sidebar-empty {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+
+/* ========================================
+   TAGS LIST
+   ======================================== */
+
+.sidebar-tags-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-tag-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.sidebar-tag-item.selected {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.sidebar-tag-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px;
+
+    cursor: pointer;
+    list-style: none;
+}
+
+.sidebar-tag-summary::-webkit-details-marker {
+    display: none;
+}
+
+.sidebar-tag-summary::after {
+    content: "›";
+    color: #64748b;
+    font-size: 20px;
+    transform: rotate(0deg);
+}
+
+.sidebar-tag-item[open] .sidebar-tag-summary::after {
+    transform: rotate(90deg);
+}
+
+.sidebar-tag-id {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.sidebar-tag-status {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.sidebar-tag-details {
+    padding: 0 12px 8px;
+}
+
+.sidebar-tag-details .info-row {
+    padding: 8px 0;
+    font-size: 13px;
+}
