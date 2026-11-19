@@ -49,7 +49,7 @@ constexpr const char* SCANNER_ID = "scanner-1";
 
 // IP ноутбука, на котором запущен Mosquitto.
 // НЕ localhost: сервер MQTT находится на другом ноутбуке.
-constexpr const char* MQTT_HOST = "192.168.1.100";
+constexpr const char* MQTT_HOST = "10.115.10.11";
 constexpr int MQTT_PORT = 1883;
 
 constexpr int MQTT_QOS = 1;
