@@ -4,38 +4,69 @@ project(ble_scanner_project LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ==========================================================
-# 1. РЈРљРђР–РРўР• Р—Р”Р•РЎР¬ РџРЈРўР¬ Рљ Р’РђРЁР•Р™ РЎРљРђР§РђРќРќРћР™ РџРђРџРљР• SIMPLEBLE
-# (РСЃРїРѕР»СЊР·СѓР№С‚Рµ РїСЂСЏРјС‹Рµ СЃР»РµС€Рё /)
-# ==========================================================
 set(SIMPLEBLE_LOCAL_PATH "C:/ble_setup/ble_workspace/simpleble/simpleble/simpleble")
 
-# РћС‚РєР»СЋС‡Р°РµРј СЃР±РѕСЂРєСѓ РїСЂРёРјРµСЂРѕРІ Рё С‚РµСЃС‚РѕРІ РІРЅСѓС‚СЂРё simpleble РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ
 set(SIMPLEBLE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SIMPLEBLE_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(SIMPLEBLE_BUILD_SHARED OFF CACHE BOOL "" FORCE) # РЎС‚Р°С‚РёС‡РµСЃРєР°СЏ Р»РёРЅРєРѕРІРєР° (РЅРµ РЅСѓР¶РµРЅ simpleble.dll)
 
-# Р”РѕР±Р°РІР»СЏРµРј Р»РѕРєР°Р»СЊРЅСѓСЋ РїР°РїРєСѓ РєР°Рє С‡Р°СЃС‚СЊ РЅР°С€РµРіРѕ РїСЂРѕРµРєС‚Р°
 add_subdirectory(${SIMPLEBLE_LOCAL_PATH} simpleble_build)
 
 # ==========================================================
-# 2. РќР°СЃС‚СЂРѕР№РєРё Mosquitto
+# Mosquitto
 # ==========================================================
-set(MOSQUITTO_INCLUDE_DIR "C:/Program Files/mosquitto/devel")
-set(MOSQUITTO_LIBRARY "C:/Program Files/mosquitto/devel/mosquitto.lib")
+
+set(MOSQUITTO_ROOT "C:/Program Files/mosquitto")
+
+set(MOSQUITTO_INCLUDE_DIR "${MOSQUITTO_ROOT}/devel")
+set(MOSQUITTO_LIBRARY "${MOSQUITTO_ROOT}/devel/mosquitto.lib")
+
+if(NOT EXISTS "${MOSQUITTO_INCLUDE_DIR}/mosquitto.h")
+    message(FATAL_ERROR "mosquitto.h not found!")
+endif()
+
+if(NOT EXISTS "${MOSQUITTO_LIBRARY}")
+    message(FATAL_ERROR "mosquitto.lib not found!")
+endif()
+
+message(STATUS "Mosquitto include: ${MOSQUITTO_INCLUDE_DIR}")
+message(STATUS "Mosquitto library: ${MOSQUITTO_LIBRARY}")
 
 # ==========================================================
-# 3. РќР°С€ РёСЃРїРѕР»РЅСЏРµРјС‹Р№ С„Р°Р№Р»
+# 3. Наш исполняемый файл
 # ==========================================================
+
 add_executable(ble_scanner src/main.cpp)
 
-target_include_directories(ble_scanner PRIVATE ${MOSQUITTO_INCLUDE_DIR})
+target_include_directories(ble_scanner PRIVATE
+    ${MOSQUITTO_INCLUDE_DIR}
+)
 
-target_link_libraries(ble_scanner PRIVATE 
-    simpleble::simpleble 
+target_link_libraries(ble_scanner PRIVATE
+    simpleble::simpleble
     ${MOSQUITTO_LIBRARY}
 )
 
+# ==========================================================
+# 4. Копирование DLL Mosquitto
+# ==========================================================
+
 if(WIN32)
-    target_compile_definitions(ble_scanner PRIVATE _CRT_SECURE_NO_WARNINGS)
+    set(MOSQUITTO_DLLS
+        mosquitto.dll
+        mosquitto_common.dll
+        cjson.dll
+        pthreadVC3.dll
+        libcrypto-3-x64.dll
+        libssl-3-x64.dll
+    )
+
+    foreach(DLL ${MOSQUITTO_DLLS})
+        add_custom_command(TARGET ble_scanner POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${MOSQUITTO_ROOT}/${DLL}"
+                "$<TARGET_FILE_DIR:ble_scanner>/${DLL}"
+            COMMENT "Copying ${DLL}"
+        )
+    endforeach()
 endif()
