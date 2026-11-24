@@ -3,33 +3,39 @@ project(ble_scanner_project LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Dependencies installed by setup.ps1 through vcpkg.
-find_package(simpleble REQUIRED CONFIG)
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(unofficial-mosquitto CONFIG REQUIRED)
+# ==========================================================
+# 1. РЈРљРђР–РРўР• Р—Р”Р•РЎР¬ РџРЈРўР¬ Рљ Р’РђРЁР•Р™ РЎРљРђР§РђРќРќРћР™ РџРђРџРљР• SIMPLEBLE
+# (РСЃРїРѕР»СЊР·СѓР№С‚Рµ РїСЂСЏРјС‹Рµ СЃР»РµС€Рё /)
+# ==========================================================
+set(SIMPLEBLE_LOCAL_PATH "C:/ble_setup/ble_workspace/simpleble/simpleble/simpleble")
 
-# Support both common layouts:
-#   src/main.cpp
-#   main.cpp
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
-    set(SCANNER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
-elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-    set(SCANNER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-else()
-    message(FATAL_ERROR "Cannot find src/main.cpp or main.cpp in ${CMAKE_CURRENT_SOURCE_DIR}")
-endif()
+# РћС‚РєР»СЋС‡Р°РµРј СЃР±РѕСЂРєСѓ РїСЂРёРјРµСЂРѕРІ Рё С‚РµСЃС‚РѕРІ РІРЅСѓС‚СЂРё simpleble РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ
+set(SIMPLEBLE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(SIMPLEBLE_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(SIMPLEBLE_BUILD_SHARED OFF CACHE BOOL "" FORCE) # РЎС‚Р°С‚РёС‡РµСЃРєР°СЏ Р»РёРЅРєРѕРІРєР° (РЅРµ РЅСѓР¶РµРЅ simpleble.dll)
 
-add_executable(ble_scanner "${SCANNER_SOURCE}")
+# Р”РѕР±Р°РІР»СЏРµРј Р»РѕРєР°Р»СЊРЅСѓСЋ РїР°РїРєСѓ РєР°Рє С‡Р°СЃС‚СЊ РЅР°С€РµРіРѕ РїСЂРѕРµРєС‚Р°
+add_subdirectory(${SIMPLEBLE_LOCAL_PATH} simpleble_build)
 
-target_link_libraries(ble_scanner PRIVATE
-    simpleble::simpleble
-    nlohmann_json::nlohmann_json
-    unofficial::mosquitto::mosquitto
+# ==========================================================
+# 2. РќР°СЃС‚СЂРѕР№РєРё Mosquitto
+# ==========================================================
+set(MOSQUITTO_INCLUDE_DIR "C:/Program Files/mosquitto/devel")
+set(MOSQUITTO_LIBRARY "C:/Program Files/mosquitto/devel/mosquitto.lib")
+
+# ==========================================================
+# 3. РќР°С€ РёСЃРїРѕР»РЅСЏРµРјС‹Р№ С„Р°Р№Р»
+# ==========================================================
+add_executable(ble_scanner src/main.cpp)
+
+target_include_directories(ble_scanner PRIVATE ${MOSQUITTO_INCLUDE_DIR})
+
+target_link_libraries(ble_scanner PRIVATE 
+    simpleble::simpleble 
+    ${MOSQUITTO_LIBRARY}
 )
 
-if(MSVC)
-    target_compile_options(ble_scanner PRIVATE /W4 /EHsc)
-    target_compile_definitions(ble_scanner PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
+if(WIN32)
+    target_compile_definitions(ble_scanner PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
