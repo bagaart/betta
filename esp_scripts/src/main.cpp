@@ -55,7 +55,7 @@ constexpr int RSSI_NEAR_EXIT  = -50;
 constexpr size_t NEAR_MIN_PACKETS = 3;
 
 // --- НАСТРОЙКИ MQTT ---
-constexpr const char* MQTT_BROKER_HOST = "10.115.10.11"; // Адрес брокера
+constexpr const char* MQTT_BROKER_HOST = "192.168.43.184"; // Адрес брокера
 constexpr int MQTT_BROKER_PORT = 1883;                // Порт брокера
 constexpr const char* MQTT_CLIENT_ID = "ble_scanner_2";
 constexpr const char* MQTT_TOPIC = "ips/scanners/scanner-2/detections"; //1 - id именно этого сканера - для других нужно менять
