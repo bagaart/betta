@@ -248,7 +248,7 @@ void publishMqttReport(
         // Формируем JSON строго по вашему шаблону
         std::string payload = "{";
         payload += "\"schema_version\":1,";
-        payload += "\"tag_id\":\"" + jsonEscape(mac) + "\","; // Используем MAC как tag_id
+        payload += "\"tag_id\":\"" + jsonEscape(info.name.empty() ? "unknown" : info.name) + "\",";
         payload += "\"timestamp\":" + timestamp_str + ",";
         payload += "\"measurements\":{";
         payload += "\"rssi\":" + std::to_string(current_rssi);
